@@ -1,0 +1,16 @@
+.boxFormatCustom {
+    box-sizing: border-box;
+    height: 150px;
+    text: center;
+    border: 3px solid blue;
+}
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100%; /* These two lines are counted as one :-)       */
+    display: flex;
+    align-items: center;
+}
+.insideText {
+    margin-left: auto;
+    margin-right: auto;
+}

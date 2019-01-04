@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="ticTacToe.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Tic Tac Toe</h1>
+        <h2 class="playerTurn text-center">"X" player's turn</h2>
+        <div class="row">
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-1" class="insideText">&nbsp</h1>
+            </div>
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-2" class="insideText">&nbsp</h1>
+            </div>
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-3" class="insideText">&nbsp</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-4" class="insideText">&nbsp</h1>
+            </div>
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-5" class="insideText">&nbsp</h1>
+            </div>
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-6" class="insideText">&nbsp</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-7" class="insideText">&nbsp</h1>
+            </div>
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-8" class="insideText">&nbsp</h1>
+            </div>
+            <div class="col-4 boxFormatCustom vertical-center mb-0">
+                <h1 id="space-9" class="insideText">&nbsp</h1>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+<script>
+    var recordingArr = [0, "---------", "", "", 0]; // [turn count, 123456789, HTMLAdded, player turn/win]
+
+    function modString (idName, recording) {
+        idName = idName.substring(6);                                                                       //ex turn space-6 into 6
+        var toBeModified = recording[1];
+        var turnOrWin;
+        if (recording[4] === 1) {                                                                           //reset the game
+            $('.insideText').html('<h1>&nbsp</h1>');
+            // recording = [0, "---------", "", "", 0];
+            recording [0] = 0;
+            recording [1] = "---------";
+            recording [2] = "&nbsp";
+            recording [3] = "<h2>" + '"X"' + " player's turn</h2>";
+            recording [4] = 0;
+            whoTurn = "";
+            return recording;
+        } else {
+            if (toBeModified.substring(idName - 1, idName) === "-") {                                             //Check if the space is blank
+                var whoTurn = recording[0] % 2;
+                if (whoTurn === 0) {                                                                             //if x's turn
+                    whoTurn = "X";
+                    turnOrWin = "<h2>" + '"O"' + " player's turn</h2>";
+                } else {                                                                                        //if o's turn
+                    whoTurn = "O";
+                    turnOrWin = "<h2>" + '"X"' + " player's turn</h2>";
+                }
+                toBeModified = toBeModified.substring(0, idName - 1) + whoTurn + toBeModified.substring(idName, 9);  //add occupied value to map string
+                var outputHTML = "<h1>" + whoTurn + "</h1>";                                                        //html to be added
+                var winArray = ['111000000', '100100100', '100010001', '010010010', '001010100', '001001001', '000111000', '000000111'];
+                for (var j = 0; j < 8; j += 1) {
+                    var countToWin = 0;
+                    for (var i = 0; i < 9; i += 1) {
+                        if (countToWin === 3) {                                                                         //if player wins
+                            break;
+                        } else if (toBeModified.substring(i, i + 1) === whoTurn) {
+                            if (winArray[j].substring(i, i + 1) === "1") {
+                                countToWin += 1;
+                            }
+                        }
+                    }
+                    if (countToWin === 3) {                                                                             //if player wins
+                        turnOrWin = '"' + whoTurn + '"' + ' player wins';
+                        // outputHTML = '<h1>&nbsp</h1>';
+                        recording[4] = 1;
+                        break;
+                    }
+                }
+                recording [0] += 1;
+                recording [1] = toBeModified;
+                recording [2] = outputHTML;
+                recording [3] = turnOrWin;
+            }
+            if (recording [0] === 9 && recording[4] !== 1) {                                                                    // displays draw
+                recording [3] = "<h2>" + "draw" + "</h2>";
+                recording [4] = 1;
+            }
+        }
+        return recording;
+    }
+    $('.insideText').click(function() {
+        modString(this.id, recordingArr); //pass into function(idName) returns modified recordingArr
+        $(this).html(recordingArr[2]);
+        $('.playerTurn').html(recordingArr[3]);
+    });
+
+</script>
+</body>
+</html>
